@@ -1,0 +1,41 @@
+pipeline {
+     agent {label 'slave1'}
+
+
+    stages {
+          stage('stage 1') {
+		           parallel {
+		                stage ('stage 1-A') {
+				                  steps {
+                              echo 'this is stage 1-A'
+					                     sh 'sleep 5'
+			                    }
+		                }
+				            stage ('stage 1-B') {
+				                  steps {
+                               echo 'this is stage 1-B'
+					                     sh 'sleep 5'
+			                    }
+		                }
+				            stage ('stage 1-C') {
+				                   steps {
+                               echo 'this is stage 1-C'
+					                     sh 'sleep 5'
+			                     }
+		                }
+	            }	
+         }	
+         stage('stage 2') {
+		        steps {
+                echo 'this is stage 2'
+				        sh 'sleep 5'
+		      	}
+        }
+		    stage('stage 3') {
+		        steps {
+                echo 'this is stage 3'
+				        sh 'sleep 5'
+            }
+        }
+	}
+}
