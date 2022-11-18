@@ -1,41 +1,29 @@
 pipeline {
-     agent {label 'slave1'}
-
-
-    stages {
-          stage('stage 1') {
-		           parallel {
-		                stage ('stage 1-A') {
-				                  steps {
-                              echo 'this is stage 1-A'
-					                     sh 'sleep 5'
-			                    }
-		                }
-				            stage ('stage 1-B') {
-				                  steps {
-                               echo 'this is stage 1-B'
-					                     sh 'sleep 5'
-			                    }
-		                }
-				            stage ('stage 1-C') {
-				                   steps {
-                               echo 'this is stage 1-C'
-					                     sh 'sleep 5'
-			                     }
-		                }
-	            }	
-         }	
-         stage('stage 2') {
-		        steps {
-                echo 'this is stage 2'
-				        sh 'sleep 5'
-		      	}
-        }
-		    stage('stage 3') {
-		        steps {
-                echo 'this is stage 3'
-				        sh 'sleep 5'
-            }
-        }
+	agent { label 'slave2' }
+	stages {
+		stage ('Git checkout') {
+			steps {
+				echo 'This is GIT checkout stage'
+				git 'https://github.com/plvsbhat/Jenkinsfile.git'
+			}
+		}
+		stage ('Build') {
+			steps {
+				echo 'This is a build stage'
+				sh 'mvn clean install'
+			}
+		}
+		stage ('Push to artifactory') {
+			steps {
+				echo 'this is push stage'
+				sh 'sleep 3'
+			}
+		}
+		stage ('Deploy') {
+			steps {
+				echo ' this is deploy stage'
+				sh '''cd /home/ec2-user/jenkins/workspace/java-project3/ sudo cp target/*.jar /opt/apache*/webapps/'''
+			}
+		}
 	}
 }
